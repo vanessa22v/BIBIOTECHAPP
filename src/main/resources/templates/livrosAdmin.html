@@ -1,0 +1,108 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org" th:replace="fragments/layout :: layout(~{::title}, ~{::#content})">
+<head>
+    <title>Livros | BiblioTech</title>
+</head>
+<body>
+
+<div id="content">
+    <div th:replace="fragments/header :: header"></div>
+
+    <main class="container my-4">
+        <h2>Livros</h2>
+
+        <div class="card w-100 mt-5">
+            <div class="card-body">
+                <h5 class="card-title mb-2">Novo livro</h5>
+
+                <div th:if="${successMessage != null}" th:text="${successMessage}" class="alert alert-success" role="alert"></div>
+                <div th:if="${errorMessage != null}" th:text="${errorMessage}" class="alert alert-danger" role="alert"></div>
+
+                <form method="post" th:action="@{/admin/livros}">
+                    <div class="mb-3">
+                        <label for="titulo" class="form-label">título<span class="text-danger">*</span></label>
+                        <input type="text" class="form-control" id="titulo" name="titulo" required>
+                        <div class="form-text"></div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="autor" class="form-label">Autor<span class="text-danger">*</span></label>
+                        <input type="text" class="form-control" id="autor" name="autor" required>
+                        <div class="form-text"></div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="editoria" class="form-label">Editoria<span class="text-danger">*</span></label>
+                        <input type="text" class="form-control" id="editoria" name="editoria" required>
+                        <div class="form-text"></div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="esdbn" class="form-label">ESBN<span class="text-danger">*</span></label>
+                        <input type="text" class="form-control" id="esdbn" name="esdbn" required>
+                        <div class="form-text"></div>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Salvar <i class="bi bi-save2 ms-2"></i></button>
+                </form>
+            </div>
+        </div>
+
+        <div class="card w-100 mt-5">
+            <div class="card-body">
+                <h5 class="card-title mb-2">Livros cadastrados</h5>
+
+                <table class="table w-100">
+                    <thead>
+                    <tr>
+                        <th>Titulo</th>
+                        <th>Autor</th>
+                        <th>Editora</th>
+                        <th>ISBN</th>
+                        <th>Alterar</th>
+                        <th>Apagar</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="livro : ${livros}">
+                        <td th:text="${livro.titulo}"></td>
+                        <td th:text="${livro.autor}"></td>
+                        <td th:text="${livro.editora}"></td>
+                        <td th:text="${livro.ISBN}"></td>
+                        <td>
+                            <a th:href="@{/admin/livros/editar/{id}(id=${livro.id})}" class="btn btn-success" style="width: 7rem">
+                                Editar <i class="bi bi-pencil-fill ms-2"></i>
+                            </a>
+                        </td>
+                        <td>
+                            <button class="btn btn-danger" style="width: 7rem" data-bs-toggle="modal" th:data-bs-target="'#deleteModal' + ${livro.id}">
+                                Excluir <i class="bi bi-trash-fill ms-2"></i>
+                            </button>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+
+    <div th:each="livro : ${livros}">
+        <div class="modal fade" th:id="'deleteModal' + ${livro.id}" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="deleteModalLabel">Confirmar Exclusão</h5>
+                    </div>
+                    <div class="modal-body">
+                        Tem certeza de que deseja excluir o livro: <strong th:text="${livro.titulo}"></strong>?
+                    </div>
+                    <form class="modal-footer" method="post" th:action="@{/admin/livros/remover}">
+                        <input type="hidden" name="livroId" th:value="${livro.id}">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                        <button type="submit" class="btn btn-danger" data-bs-dismiss="modal">Excluir</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

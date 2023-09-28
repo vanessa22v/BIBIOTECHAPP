@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="pt-br" xmlns:th="http://www.thymeleaf.org" th:replace="fragments/layout :: layout(~{::title}, ~{::#content})">
+<head>
+    <title>Agendar Emprestimo</title>
+</head>
+<body>
+
+<div id="content">
+    <div th:replace="fragments/header :: header"></div>
+
+    <div class="container my-4">
+        <h2>Agendar Emprestimo</h2>
+
+        <form method="post" th:action="@{/admin/emprestimos/novo}">
+            <div class="mb-3">
+                <label class="form-label" for="clienteId">Cliente<span class="text-danger">*</span></label>
+                <select class="form-select" id="clienteId" name="clienteId" required>
+                    <option value="" selected disabled>Selecione um cliente</option>
+                    <option th:each="cliente: ${clientes}" th:value="${cliente.id}" th:text="${cliente.nome}"></option>
+                </select>
+                <div class="form-text"></div>
+            </div>
+            <div class="mb-3">
+                <label class="form-label" for="livroId">Livro<span class="text-danger">*</span></label>
+                <select class="form-select" id="livroId" name="livroId" required>
+                    <option value="" selected disabled>Selecione um livro</option>
+                    <option th:each="livro: ${livros}" th:value="${livro.id}" th:text="${livro.titulo}"></option>
+                </select>
+                <div class="form-text"></div>
+            </div>
+            <div class="mb-3">
+                <label class="form-label" for="bibliotecario">Bibliotecario<span class="text-danger">*</span></label>
+                <input type="text" class="form-control" id="bibliotecario" name="bibliotecario" required>
+            </div>
+            <div class="mb-3">
+                <label for="data" class="form-label">Prazo de Devolução<span class="text-danger">*</span></label>
+                <input type="date" class="form-control" id="data" name="data" required>
+                <div class="form-text"></div>
+            </div>
+
+
+            <button type="submit" class="btn btn-primary">Agendar <i class="bi bi-calendar-check-fill ms-2"></i></button>
+        </form>
+    </div>
+</div>
+
+</body>
+</html>
